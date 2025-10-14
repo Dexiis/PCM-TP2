@@ -110,5 +110,5 @@ function dealerFinish() {
  * @param {boolean} [replace=false] - Indicates whether to replace the existing image.
  */
 function printCard(element, card, replace = false) {
-
+    const card = document.createElement('img');  
 }
