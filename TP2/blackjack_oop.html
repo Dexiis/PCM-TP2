@@ -52,35 +52,37 @@
         <!-- Placeholder for displaying player's cards -->
 
         <!-- Button for the player to draw a new card -->
-        <button
-          class="btn btn-primary"
-          id="card"
-          type="button"
-          onclick="playerNewCard()"
-        >
-          Card
-        </button>
+        <section id="buttonSection" class="d-flex justify-content-center gap-3">
+          <button
+            class="btn btn-primary"
+            id="card"
+            type="button"
+            onclick="playerNewCard()"
+          >
+            Card
+          </button>
 
-        <!-- Button for the player to stand (end their turn) -->
-        <button
-          class="btn btn-secondary"
-          id="stand"
-          type="button"
-          onclick="dealerFinish()"
-        >
-          Stand
-        </button>
+          <!-- Button for the player to stand (end their turn) -->
+          <button
+            class="btn btn-secondary"
+            id="stand"
+            type="button"
+            onclick="dealerFinish()"
+          >
+            Stand
+          </button>
 
-        <!-- Button to start a new game, initially disabled -->
-        <button
-          class="btn btn-success"
-          id="new_game"
-          type="button"
-          onclick="newGame()"
-          disabled
-        >
-          New Game
-        </button>
+          <!-- Button to start a new game, initially disabled -->
+          <button
+            class="btn btn-success"
+            id="new_game"
+            type="button"
+            onclick="newGame()"
+            disabled
+          >
+            New Game
+          </button>
+        </section>
       </section>
 
       <!-- Section to display the game's status and messages -->

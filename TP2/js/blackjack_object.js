@@ -18,13 +18,13 @@ class Card {
 
   getSuit() {
     switch (this.suit) {
-      case 1:
+      case 0:
         return "Hearts";
-      case 2:
+      case 1:
         return "Diamonds";
-      case 3:
+      case 2:
         return "Spades";
-      case 4:
+      case 3:
         return "Clubs";
     }
   }
@@ -63,6 +63,7 @@ class Blackjack {
 
     // Initialize the deck of cards
     this.deck = this.shuffle(this.newDeck()); // Create and shuffle a new deck
+    //console.log(this.deck);
   }
 
   /**
@@ -71,9 +72,9 @@ class Blackjack {
    */
   newDeck() {
     let newDeck = [];
-    for (let suit = 0; suit < this.SUIT_NUMBER; suit++) {
-      for (let number = 0; number < this.CARD_NUMBER; number++) {
-        newDeck.push(Card(number + 1, suit)); // Append the card to the deck
+    for (let suit = 0; suit < Blackjack.SUIT_NUMBER; suit++) {
+      for (let number = 0; number < Blackjack.CARD_NUMBER; number++) {
+        newDeck.push(new Card(number + 1, suit)); // Append the card to the deck
       }
     }
     return newDeck;
@@ -85,7 +86,7 @@ class Blackjack {
    * @returns {Card[]} - The shuffled deck.
    */
   shuffle(deck) {
-    for (let i = this.DECK_SIZE - 1; i >= 0; i--) {
+    for (let i = Blackjack.DECK_SIZE - 1; i >= 0; i--) {
       const number = Math.floor(Math.random() * (i + 1)); // Number from 0 to i
       [deck[i], deck[number]] = [deck[number], deck[i]]; // Swap deck[i] for deck[number] and vice versa
     }
@@ -131,7 +132,7 @@ class Blackjack {
       } else if (cards[i].number > 10) {
         // Jack, Queen and King
         value += 10;
-      } else if (cards[i].number == 1) {
+      } else if (cards[i].number === 1) {
         // Aces
         acesNumber++;
       }
@@ -139,7 +140,7 @@ class Blackjack {
 
     value += acesNumber * 11; // Apply aces as 11 points intially
 
-    while (acesNumber > 0 && value > this.MAX_POINTS) {
+    while (acesNumber > 0 && value > Blackjack.MAX_POINTS) {
       // Best use of the aces - Prevents busting
       value -= 10;
       acesNumber--;
@@ -176,10 +177,13 @@ class Blackjack {
    * @returns {Object} - The updated game state.
    */
   getGameState() {
+
     this.state.playerBusted =
-      this.getCardsValue(this.getPlayerCards()) > this.MAX_POINTS;
+      this.getCardsValue(this.getPlayerCards()) > Blackjack.MAX_POINTS;
 
     this.state.dealerBusted =
-      this.getCardsValue(this.getDealerCards()) > this.MAX_POINTS;
+      this.getCardsValue(this.getDealerCards()) > Blackjack.MAX_POINTS;
+
+    return this.state;
   }
 }

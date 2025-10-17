@@ -44,7 +44,15 @@ function newGame() {
   game = new Blackjack(); // Creates a new instance of the Blackjack game
   debug(game); // Displays the current state of the game for debugging
 
-  //TODO: Add missing code.
+  initGame();
+}
+
+function initGame() {
+  // TURN SECOND CARD UPSIDE DOWN
+  dealerNewCard();
+  dealerNewCard();
+  playerNewCard();
+  playerNewCard();
 }
 
 //TODO: Implement this method.
@@ -59,21 +67,54 @@ function finalScore(state) {}
  * Updates the dealer's state in the game.
  * @param {Object} state - The current state of the game.
  */
-function updateDealer(state) {}
+function updateDealer(state) {
+  const dealerElement = document.getElementById("dealer");
+
+  clearElement("dealer");
+  for (let dealerCard of game.getDealerCards()) {
+    printCard(dealerElement, dealerCard, false);
+  }
+}
 
 //TODO: Implement this method.
 /**
  * Updates the player's state in the game.
  * @param {Object} state - The current state of the game.
  */
-function updatePlayer(state) {}
+function updatePlayer(state) {
+  const playerPoints = game.getCardsValue(game.getPlayerCards());
+  const playerElement = document.getElementById("player");
+
+  clearElement("player");
+  for (let playerCard of game.getPlayerCards()) {
+    printCard(playerElement, playerCard, false);
+  }
+
+  if (playerPoints === Blackjack.MAX_POINTS) {
+    game.setDealerTurn(true);
+    dealerFinish();
+  }
+
+  if (state.playerBusted) alert("PLAYER BUST");
+
+  if (state.dealerBust) alert("DEALER BUST");
+
+  debug(game);
+
+  return state;
+}
 
 //TODO: Implement this method.
 /**
  * Causes the dealer to draw a new card.
  * @returns {Object} - The game state after the dealer's move.
  */
-function dealerNewCard() {}
+function dealerNewCard() {
+  game.dealerMove();
+
+  updateDealer(game.getGameState());
+  return game.getGameState();
+}
 
 //TODO: Implement this method.
 /**
@@ -81,8 +122,9 @@ function dealerNewCard() {}
  * @returns {Object} - The game state after the player's move.
  */
 function playerNewCard() {
-  printCard(document.getElementById("player"), new Card(5, 1), false); // TEST WORKING
+  game.playerMove();
 
+  updatePlayer(game.getGameState());
   return game.getGameState();
 }
 
@@ -90,7 +132,16 @@ function playerNewCard() {
 /**
  * Finishes the dealer's turn.
  */
-function dealerFinish() {}
+function dealerFinish() {
+  document.getElementById("card").disabled = true;
+  document.getElementById("stand").disabled = true;
+  document.getElementById("new_game").disabled = true;
+  while (
+    game.getCardsValue(game.getDealerCards()) < Blackjack.DEALER_MAX_TURN_POINTS
+  ) {
+    dealerNewCard();
+  }
+}
 
 //TODO: Implement this method.
 /**
@@ -102,7 +153,12 @@ function dealerFinish() {}
 function printCard(element, card, replace = false) {
   const rank = card.getRank().toLowerCase();
   const suit = card.getSuit().toLowerCase();
-  const imagePath = `img/svg/${rank}_of_${suit}.svg`;
+  let imagePath;
+  if (card.upsideDown) {
+    imagePath = "img/svg/card_back.svg";
+  } else {
+    imagePath = `img/svg/${rank}_of_${suit}.svg`;
+  }
   console.log(imagePath);
 
   const cardImage = document.createElement("img");
@@ -110,4 +166,12 @@ function printCard(element, card, replace = false) {
   cardImage.alt = `${card.getRank()} of ${card.getSuit()}`;
 
   element.appendChild(cardImage);
+}
+
+function clearElement(elementId) {
+  const parentElement = document.getElementById(elementId);
+
+  if (parentElement) {
+    parentElement.innerHTML = "";
+  }
 }
