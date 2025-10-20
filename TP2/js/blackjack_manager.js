@@ -58,7 +58,7 @@ function initGame() {
   playerNewCard();
   dealerNewCard();
   playerNewCard();
-  game.getDealerCards()[0].setUpsideDown(true);
+  game.getDealerCards()[1].setUpsideDown(true);
   updateDealer(game.getGameState());
 }
 
@@ -68,16 +68,12 @@ function initGame() {
  * @param {Object} state - The current state of the game.
  */
 function finalScore(state) {
-  const playerPoints = game.getPlayerPoints();
-  const dealerPoints = game.getDealerPoints();
-
-  state.gameEnded = true;
-  if (!state.playerBusted && !state.dealerBusted) {
-    if (playerPoints > dealerPoints) alert("PLAYER WINS");
-    else if (playerPoints < dealerPoints) alert("DEALER WINS");
-    else alert("PUSH");
-  }
-
+  if (state.playerWon) alert("PLAYER WINS");
+  else if (state.dealerWon) alert("DEALER WINS");
+  else if (state.playerBusted) alert("PLAYER BUST");
+  else if (state.dealerBusted) alert("DEALER BUST")
+  else alert("PUSH");
+  
   finalizeButtons();
 }
 
@@ -95,7 +91,6 @@ function updateDealer(state) {
   }
 
   updateScore(game.getPlayerPoints(), game.getDealerPoints());
-  if (state.dealerBusted) alert("DEALER BUST");
 
   if (state.gameEnded) finalScore(game.getGameState());
 }
@@ -114,14 +109,12 @@ function updatePlayer(state) {
       "rotate(-5deg)";
   }
 
-  if (game.getPlayerPoints() === Blackjack.MAX_POINTS) {
+  if (game.getPlayerPoints() === Blackjack.MAX_POINTS || game.state.playerBusted) {
     game.setDealerTurn(true);
     dealerFinish();
   }
-
-  if (state.playerBusted) alert("PLAYER BUST");
-
   updateScore(game.getPlayerPoints(), game.getDealerPoints());
+
   //debug(game);
 
   return state;
@@ -156,7 +149,7 @@ function playerNewCard() {
  * Finishes the dealer's turn.
  */
 function dealerFinish() {
-  game.getDealerCards()[0].setUpsideDown(false);
+  game.getDealerCards()[1].setUpsideDown(false);
   while (
     game.getCardsValue(game.getDealerCards()) < Blackjack.DEALER_MAX_TURN_POINTS
   ) {

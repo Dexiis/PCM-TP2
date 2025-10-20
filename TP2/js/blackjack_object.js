@@ -25,13 +25,13 @@ class Blackjack {
       gameEnded: false, // Indicates whether the game has ended
       playerWon: false, // Indicates if the player has won
       dealerWon: false, // Indicates if the dealer has won
+      push: false, // Indicates if the player and the dealer have tied
       playerBusted: false, // Indicates if the player has exceeded MAX_POINTS
       dealerBusted: false, // Indicates if the dealer has exceeded MAX_POINTS
     };
 
     // Initialize the deck of cards
     this.deck = this.shuffle(this.newDeck()); // Create and shuffle a new deck
-    //console.log(this.deck);
   }
 
   /**
@@ -160,6 +160,12 @@ class Blackjack {
 
     this.state.dealerBusted =
       this.getCardsValue(this.getDealerCards()) > Blackjack.MAX_POINTS;
+
+    this.state.playerWon = (this.getDealerPoints() < this.getPlayerPoints() && !this.state.playerBusted);
+
+    this.state.dealerWon = (this.getDealerPoints() > this.getPlayerPoints() && !this.state.dealerBusted);
+
+    this.state.push = (this.getDealerPoints() === this.getPlayerPoints());
 
     if (
       this.getCardsValue(this.getDealerCards()) >=
