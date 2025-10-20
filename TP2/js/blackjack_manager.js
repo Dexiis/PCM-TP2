@@ -1,5 +1,4 @@
 // Blackjack OOP
-
 let game = null; // Stores the current instance of the game
 
 /**
@@ -53,6 +52,8 @@ function initGame() {
   dealerNewCard();
   playerNewCard();
   playerNewCard();
+  game.getDealerCards()[1].upsideDown = true;
+  updateDealer(game.getGameState());
 }
 
 //TODO: Implement this method.
@@ -60,7 +61,17 @@ function initGame() {
  * Calculates and displays the final score of the game.
  * @param {Object} state - The current state of the game.
  */
-function finalScore(state) {}
+function finalScore(state) {
+  const playerPoints = game.getCardsValue(game.getPlayerCards());
+  const dealerPoints = game.getCardsValue(game.getDealerCards());
+
+  state.gameEnded = true;
+  if (!state.playerBusted && !state.dealerBusted) {
+    if (playerPoints > dealerPoints) alert("PLAYER WINS");
+    else if (playerPoints < dealerPoints) alert("DEALER WINS");
+    else alert("PUSH");
+  }
+}
 
 //TODO: Implement this method.
 /**
@@ -74,6 +85,8 @@ function updateDealer(state) {
   for (let dealerCard of game.getDealerCards()) {
     printCard(dealerElement, dealerCard, false);
   }
+
+  if (state.gameEnded) finalScore(game.getGameState());
 }
 
 //TODO: Implement this method.
@@ -97,7 +110,7 @@ function updatePlayer(state) {
 
   if (state.playerBusted) alert("PLAYER BUST");
 
-  if (state.dealerBust) alert("DEALER BUST");
+  if (state.dealerBusted) alert("DEALER BUST");
 
   debug(game);
 
@@ -136,6 +149,7 @@ function dealerFinish() {
   document.getElementById("card").disabled = true;
   document.getElementById("stand").disabled = true;
   document.getElementById("new_game").disabled = true;
+  game.getDealerCards()[1].upsideDown = false;
   while (
     game.getCardsValue(game.getDealerCards()) < Blackjack.DEALER_MAX_TURN_POINTS
   ) {
@@ -143,7 +157,6 @@ function dealerFinish() {
   }
 }
 
-//TODO: Implement this method.
 /**
  * Prints the card in the graphical interface.
  * @param {HTMLElement} element - The element where the card will be displayed.
@@ -151,18 +164,8 @@ function dealerFinish() {
  * @param {boolean} [replace=false] - Indicates whether to replace the existing image.
  */
 function printCard(element, card, replace = false) {
-  const rank = card.getRank().toLowerCase();
-  const suit = card.getSuit().toLowerCase();
-  let imagePath;
-  if (card.upsideDown) {
-    imagePath = "img/svg/card_back.svg";
-  } else {
-    imagePath = `img/svg/${rank}_of_${suit}.svg`;
-  }
-  console.log(imagePath);
-
   const cardImage = document.createElement("img");
-  cardImage.src = imagePath;
+  cardImage.src = card.getImagePath();
   cardImage.alt = `${card.getRank()} of ${card.getSuit()}`;
 
   element.appendChild(cardImage);

@@ -1,35 +1,3 @@
-// Card class
-class Card {
-  constructor(number, suit) {
-    this.number = number;
-    this.suit = suit;
-    this.upsideDown = false;
-  }
-
-  getRank() {
-    const rank = this.number;
-
-    if (rank === 1) return "Ace";
-    else if (rank === 11) return "Jack";
-    else if (rank === 12) return "Queen";
-    else if (rank === 13) return "King";
-    else return String(rank);
-  }
-
-  getSuit() {
-    switch (this.suit) {
-      case 0:
-        return "Hearts";
-      case 1:
-        return "Diamonds";
-      case 2:
-        return "Spades";
-      case 3:
-        return "Clubs";
-    }
-  }
-}
-
 // Blackjack object
 /**
  * Class that represents the Blackjack game.
@@ -177,12 +145,17 @@ class Blackjack {
    * @returns {Object} - The updated game state.
    */
   getGameState() {
-
     this.state.playerBusted =
       this.getCardsValue(this.getPlayerCards()) > Blackjack.MAX_POINTS;
 
     this.state.dealerBusted =
       this.getCardsValue(this.getDealerCards()) > Blackjack.MAX_POINTS;
+
+    if (
+      this.getCardsValue(this.getDealerCards()) >=
+      Blackjack.DEALER_MAX_TURN_POINTS
+    )
+      this.state.gameEnded = true;
 
     return this.state;
   }
