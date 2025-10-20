@@ -94,15 +94,17 @@ class Blackjack {
     let value = 0;
     let acesNumber = 0;
     for (let i = 0; i < cards.length; i++) {
-      if (cards[i].number > 1 && cards[i].number < 11) {
-        // 2-10
-        value += cards[i].number;
-      } else if (cards[i].number > 10) {
-        // Jack, Queen and King
-        value += 10;
-      } else if (cards[i].number === 1) {
-        // Aces
-        acesNumber++;
+      if (cards[i].upsideDown === false) {
+        if (cards[i].number > 1 && cards[i].number < 11) {
+          // 2-10
+          value += cards[i].number;
+        } else if (cards[i].number > 10) {
+          // Jack, Queen and King
+          value += 10;
+        } else if (cards[i].number === 1) {
+          // Aces
+          acesNumber++;
+        }
       }
     }
 
@@ -115,6 +117,14 @@ class Blackjack {
     }
 
     return value;
+  }
+
+  getDealerPoints() {
+    return this.getCardsValue(this.getDealerCards());
+  }
+
+  getPlayerPoints() {
+    return this.getCardsValue(this.getPlayerCards());
   }
 
   /**

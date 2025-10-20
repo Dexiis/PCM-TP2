@@ -6,6 +6,10 @@ class Card {
     this.upsideDown = false;
   }
 
+  setUpsideDown(upsideDown) {
+    this.upsideDown = upsideDown;
+  }
+
   getRank() {
     const rank = this.number;
 

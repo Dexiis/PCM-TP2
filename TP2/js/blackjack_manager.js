@@ -33,15 +33,21 @@ function finalizeButtons() {
 /**
  * Clears the page to start a new game.
  */
-function clearPage() {}
+function clearPage() {
+  clearElement("player");
+  clearElement("dealer");
+  updateScore(0, 0);
+}
 
 //TODO: Complete this method.
 /**
  * Starts a new game of Blackjack.
  */
 function newGame() {
+  buttonsInitialization();
+  clearPage();
   game = new Blackjack(); // Creates a new instance of the Blackjack game
-  debug(game); // Displays the current state of the game for debugging
+  //debug(game); // Displays the current state of the game for debugging
 
   initGame();
 }
@@ -49,10 +55,10 @@ function newGame() {
 function initGame() {
   // TURN SECOND CARD UPSIDE DOWN
   dealerNewCard();
+  playerNewCard();
   dealerNewCard();
   playerNewCard();
-  playerNewCard();
-  game.getDealerCards()[1].upsideDown = true;
+  game.getDealerCards()[0].setUpsideDown(true);
   updateDealer(game.getGameState());
 }
 
@@ -62,8 +68,8 @@ function initGame() {
  * @param {Object} state - The current state of the game.
  */
 function finalScore(state) {
-  const playerPoints = game.getCardsValue(game.getPlayerCards());
-  const dealerPoints = game.getCardsValue(game.getDealerCards());
+  const playerPoints = game.getPlayerPoints();
+  const dealerPoints = game.getDealerPoints();
 
   state.gameEnded = true;
   if (!state.playerBusted && !state.dealerBusted) {
@@ -71,6 +77,8 @@ function finalScore(state) {
     else if (playerPoints < dealerPoints) alert("DEALER WINS");
     else alert("PUSH");
   }
+
+  finalizeButtons();
 }
 
 //TODO: Implement this method.
@@ -86,6 +94,9 @@ function updateDealer(state) {
     printCard(dealerElement, dealerCard, false);
   }
 
+  updateScore(game.getPlayerPoints(), game.getDealerPoints());
+  if (state.dealerBusted) alert("DEALER BUST");
+
   if (state.gameEnded) finalScore(game.getGameState());
 }
 
@@ -95,24 +106,23 @@ function updateDealer(state) {
  * @param {Object} state - The current state of the game.
  */
 function updatePlayer(state) {
-  const playerPoints = game.getCardsValue(game.getPlayerCards());
   const playerElement = document.getElementById("player");
 
   clearElement("player");
   for (let playerCard of game.getPlayerCards()) {
-    printCard(playerElement, playerCard, false);
+    printCard(playerElement, playerCard, false).style.transform =
+      "rotate(-5deg)";
   }
 
-  if (playerPoints === Blackjack.MAX_POINTS) {
+  if (game.getPlayerPoints() === Blackjack.MAX_POINTS) {
     game.setDealerTurn(true);
     dealerFinish();
   }
 
   if (state.playerBusted) alert("PLAYER BUST");
 
-  if (state.dealerBusted) alert("DEALER BUST");
-
-  debug(game);
+  updateScore(game.getPlayerPoints(), game.getDealerPoints());
+  //debug(game);
 
   return state;
 }
@@ -146,10 +156,7 @@ function playerNewCard() {
  * Finishes the dealer's turn.
  */
 function dealerFinish() {
-  document.getElementById("card").disabled = true;
-  document.getElementById("stand").disabled = true;
-  document.getElementById("new_game").disabled = true;
-  game.getDealerCards()[1].upsideDown = false;
+  game.getDealerCards()[0].setUpsideDown(false);
   while (
     game.getCardsValue(game.getDealerCards()) < Blackjack.DEALER_MAX_TURN_POINTS
   ) {
@@ -167,8 +174,11 @@ function printCard(element, card, replace = false) {
   const cardImage = document.createElement("img");
   cardImage.src = card.getImagePath();
   cardImage.alt = `${card.getRank()} of ${card.getSuit()}`;
+  cardImage.style.width = "150px";
+  cardImage.style.marginRight = "-100px";
 
   element.appendChild(cardImage);
+  return cardImage;
 }
 
 function clearElement(elementId) {
@@ -177,4 +187,9 @@ function clearElement(elementId) {
   if (parentElement) {
     parentElement.innerHTML = "";
   }
+}
+
+function updateScore(playerPoints, dealerPoints) {
+  document.getElementById("player-points").innerHTML = String(playerPoints);
+  document.getElementById("dealer-points").innerHTML = String(dealerPoints);
 }
