@@ -45,7 +45,7 @@
         <!-- Subheading for the dealer's section -->
         <p
           id="dealer"
-          class="card-animation d-flex justify-content-center position-relative"
+          class="d-flex justify-content-center position-relative"
         ></p>
         <h1 id="dealer-points" class="fs-1">0</h1>
         <!-- Placeholder for displaying dealer's cards -->
@@ -54,40 +54,22 @@
         <!-- Subheading for the player's section -->
         <p
           id="player"
-          class="card-animation d-flex justify-content-center position-relative"
+          class="d-flex justify-content-center position-relative"
         ></p>
         <h1 id="player-points" class="fs-1">0</h1>
         <!-- Placeholder for displaying player's cards -->
 
         <!-- Button for the player to draw a new card -->
         <section id="buttonSection" class="d-flex justify-content-center gap-3">
-          <button
-            class="btn btn-primary"
-            id="card"
-            type="button"
-            onclick="playerNewCard()"
-          >
-            Card
-          </button>
+          <button class="btn btn-primary" id="hit" type="button">Hit</button>
 
           <!-- Button for the player to stand (end their turn) -->
-          <button
-            class="btn btn-secondary"
-            id="stand"
-            type="button"
-            onclick="dealerFinish()"
-          >
+          <button class="btn btn-secondary" id="stand" type="button">
             Stand
           </button>
 
           <!-- Button to start a new game, initially disabled -->
-          <button
-            class="btn btn-success"
-            id="new_game"
-            type="button"
-            onclick="newGame()"
-            disabled
-          >
+          <button class="btn btn-success" id="new_game" type="button" disabled>
             New Game
           </button>
         </section>
@@ -106,6 +88,39 @@
           <!-- Placeholder for displaying debug information -->
         </p>
       </section>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="gameResultModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Blackjack</h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div id="end-message" class="modal-body"></div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-danger"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- Footer section, currently empty -->
@@ -117,6 +132,11 @@
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
       crossorigin="anonymous"
     ></script>
 
