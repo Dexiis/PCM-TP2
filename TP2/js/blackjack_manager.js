@@ -1,5 +1,5 @@
 // Blackjack OOP
-let game = null; // Stores the current instance of the game
+let game = null;
 
 const CARD_DRAW_DELAY = 250;
 
@@ -14,25 +14,25 @@ $(document).ready(function () {
  * @param {Object} obj - The object to be debugged.
  */
 function debug(obj) {
-  document.getElementById("debug").innerHTML = JSON.stringify(obj); // Displays the state of the object as JSON
+  $("#debug").text(JSON.stringify(obj)); // Displays the state of the object as JSON
 }
 
 /**
  * Initializes the game buttons.
  */
 function buttonsInitialization() {
-  document.getElementById("hit").disabled = false; // Enables the button to draw a card
-  document.getElementById("stand").disabled = false; // Enables the button to stand
-  document.getElementById("new_game").disabled = true; // Disables the button for a new game
+  $("#hit").prop("disabled", false);
+  $("#stand").prop("disabled", false);
+  $("#new_game").prop("disabled", true);
 }
 
 /**
  * Finalizes the buttons after the game ends.
  */
 function finalizeButtons() {
-  document.getElementById("hit").disabled = true; // Disables the button to draw a card
-  document.getElementById("stand").disabled = true; // Disables the button to stand
-  document.getElementById("new_game").disabled = false; // Enables the button for a new game
+  $("#hit").prop("disabled", true);
+  $("#stand").prop("disabled", true);
+  $("#new_game").prop("disabled", false);
 }
 
 /**
@@ -92,7 +92,9 @@ function finalScore(state) {
   $("#end-message").text(result);
 
   finalizeButtons();
-  modal.show();
+  setTimeout(() => {
+    modal.show();
+  }, 500);
 }
 
 /**
@@ -100,7 +102,7 @@ function finalScore(state) {
  * @param {Object} state - The current state of the game.
  */
 function updateDealer(state) {
-  const dealerElement = document.getElementById("dealer");
+  const dealerElement = $("#dealer");
 
   clearElement("dealer");
   for (let dealerCard of game.getDealerCards()) {
@@ -117,7 +119,7 @@ function updateDealer(state) {
  * @param {Object} state - The current state of the game.
  */
 function updatePlayer(state) {
-  const playerElement = document.getElementById("player");
+  const playerElement = $("#player");
 
   clearElement("player");
   for (let playerCard of game.getPlayerCards()) {
@@ -148,13 +150,15 @@ function dealerNewCard() {
 
   const $newCard = $("#dealer img:last-child");
 
-  $newCard.css("left", "300px");
+  $newCard.css("left", "600px");
   $newCard.css("bottom", "800px");
+  $newCard.css("rotate", "-90deg");
 
   $newCard.animate(
     {
       left: "0px",
       bottom: "0px",
+      rotate: "0deg",
     },
     300
   );
@@ -172,15 +176,17 @@ function playerNewCard() {
 
   const $newCard = $("#player img:last-child");
 
-  $newCard.css("left", "300px");
+  $newCard.css("left", "600px");
   $newCard.css("bottom", "800px");
+  $newCard.css("rotate", "-90deg");
 
   $newCard.animate(
     {
       left: "0px",
       bottom: "0px",
+      rotate: "0deg",
     },
-    350
+    300
   );
 
   return game.getGameState();
@@ -214,25 +220,28 @@ function dealerDrawSequence() {
  * @param {boolean} [replace=false] - Indicates whether to replace the existing image.
  */
 function printCard(element, card, replace = false) {
-  const cardImage = document.createElement("img");
-  cardImage.src = card.getImagePath();
-  cardImage.alt = `${card.getRank()} of ${card.getSuit()}`;
-  cardImage.style.width = "150px";
-  cardImage.style.marginRight = "-100px";
-  cardImage.style.position = "relative";
+  const cardImage = $("<img>");
+  cardImage.attr("id", "card-image");
+  cardImage.attr("src", card.getImagePath());
+  cardImage.attr("alt", `${card.getRank()} of ${card.getSuit()}`);
+  cardImage.css({
+    width: "150px",
+    marginRight: "-100px",
+    position: "relative",
+  });
 
-  element.appendChild(cardImage);
+  $(element).append(cardImage);
 }
 
 function clearElement(elementId) {
-  const parentElement = document.getElementById(elementId);
+  const parentElement = $("#" + elementId);
 
   if (parentElement) {
-    parentElement.innerHTML = "";
+    parentElement.text("");
   }
 }
 
 function updateScore(playerPoints, dealerPoints) {
-  document.getElementById("player-points").innerHTML = String(playerPoints);
-  document.getElementById("dealer-points").innerHTML = String(dealerPoints);
+  $("#player-points").text(String(playerPoints));
+  $("#dealer-points").text(String(dealerPoints));
 }
